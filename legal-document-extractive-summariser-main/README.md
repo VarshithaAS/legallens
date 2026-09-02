@@ -48,6 +48,8 @@ git clone https://github.com/VarshithaAS/-legallens.git
 
 ```bash
 cd ./-legallens/legal-document-extractive-summariser-main
+```
+
 ### 3. Install dependencies
 
 ```bash
