@@ -107,4 +107,4 @@ legal-document-extractive-summariser-main/
 
 ## Author
 
-VarshithaAS
+Varshitha A S
