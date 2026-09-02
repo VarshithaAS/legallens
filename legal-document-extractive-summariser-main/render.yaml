@@ -6,14 +6,10 @@ services:
     startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: UPLOAD_FOLDER
-        value: /data/uploads
+        value: ./uploads
       - key: REPORT_FOLDER
-        value: /data/reports
+        value: ./reports
       - key: HISTORY_FOLDER
-        value: /data/history
+        value: ./history
       - key: FLASK_DEBUG
         value: "false"
-    disk:
-      name: legallens-data
-      mountPath: /data
-      sizeGB: 1
