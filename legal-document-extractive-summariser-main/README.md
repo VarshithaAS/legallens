@@ -4,7 +4,7 @@ LegalLens is a web application that extracts and analyses text from legal docume
 
 ## Live Demo
 
-https://legallens-0xrs.onrender.com/
+[Open LegalLens](https://legallens-0xrs.onrender.com/)
 
 ## Features
 
@@ -21,7 +21,7 @@ https://legallens-0xrs.onrender.com/
 - Flask
 - Gunicorn
 - HTML, CSS, and JavaScript
-- python-docx
+- `python-docx`
 - Render
 
 ## Run Locally
@@ -51,7 +51,7 @@ https://legallens-0xrs.onrender.com/
 
 This application is deployed on Render.
 
-Live URL: https://legallens-0xrs.onrender.com/
+**Live URL:** [https://legallens-0xrs.onrender.com/](https://legallens-0xrs.onrender.com/)
 
 ## Note
 
