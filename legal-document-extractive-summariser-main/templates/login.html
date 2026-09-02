@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | LegalLens</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7ff, #ece9ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Main Card */
+        .login-card {
+            width: 900px;
+            min-height: 550px;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 20px 50px rgba(50, 40, 100, 0.15);
+        }
+
+        /* Left Section */
+        .left-section {
+            width: 48%;
+            background: linear-gradient(145deg, #6655e8, #8174f0);
+            color: white;
+            padding: 55px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo {
+            position: absolute;
+            top: 35px;
+            left: 40px;
+            font-size: 25px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .logo span {
+            color: #dcd8ff;
+        }
+
+        .left-section h1 {
+            font-size: 38px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .left-section p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #eeeaff;
+            max-width: 330px;
+        }
+
+        .features {
+            margin-top: 35px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 18px;
+            font-size: 15px;
+        }
+
+        .feature-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        /* Right Section */
+        .right-section {
+            width: 52%;
+            padding: 55px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .right-section h2 {
+            font-size: 30px;
+            color: #24243a;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        /* Flash Message */
+        .message {
+            background: #fff1f1;
+            color: #d9534f;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box span {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 17px;
+            color: #8b85b5;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 48px;
+            padding: 0 15px 0 43px;
+            border: 1px solid #deddea;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+            background: #fafaff;
+        }
+
+        .form-group input:focus {
+            border-color: #6655e8;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102,85,232,0.10);
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            height: 49px;
+            border: none;
+            border-radius: 10px;
+            background: #6655e8;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 5px;
+        }
+
+        .login-btn:hover {
+            background: #5544d4;
+            transform: translateY(-1px);
+        }
+
+        /* Register */
+        .register-option {
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .register-option a {
+            color: #6655e8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-option a:hover {
+            text-decoration: underline;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 22px 0;
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e5e3ed;
+        }
+
+        .divider span {
+            margin: 0 12px;
+        }
+
+        /* Guest Button */
+        .guest-btn {
+            width: 100%;
+            height: 47px;
+            border: 1px solid #6655e8;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #6655e8;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .guest-btn:hover {
+            background: #f0eeff;
+        }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+
+            .login-card {
+                width: 92%;
+                min-height: auto;
+            }
+
+            .left-section {
+                display: none;
+            }
+
+            .right-section {
+                width: 100%;
+                padding: 45px 35px;
+            }
+        }
+
+        @media (max-width: 450px) {
+
+            .right-section {
+                padding: 35px 25px;
+            }
+
+            .right-section h2 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-card">
+
+        <!-- LEFT SIDE -->
+        <div class="left-section">
+
+            <div class="logo">
+                Legal<span>Lens</span>
+            </div>
+
+            <h1>
+                Welcome<br>
+                Back!
+            </h1>
+
+            <p>
+                Simplify your legal documents with
+                intelligent extraction and risk analysis.
+            </p>
+
+            <div class="features">
+
+                <div class="feature">
+                    <div class="feature-icon">✓</div>
+                    <span>Extract important information</span>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">✓</div>
+                    <span>Identify potential legal risks</span>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">✓</div>
+                    <span>Generate clear summaries</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+        <div class="right-section">
+
+            <h2>Sign in</h2>
+
+            <p class="subtitle">
+                Enter your details to access LegalLens
+            </p>
+
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="message">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+
+            <!-- LOGIN FORM -->
+            <form method="POST" action="{{ url_for('login') }}">
+
+                <div class="form-group">
+
+                    <label for="username">
+                        Username
+                    </label>
+
+                    <div class="input-box">
+                        <span>👤</span>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter your username"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="input-box">
+                        <span>🔒</span>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+
+                <button type="submit" class="login-btn">
+                    Sign In
+                </button>
+
+            </form>
+
+
+            <!-- REGISTER -->
+            <div class="register-option">
+
+                Don't have an account?
+
+                <a href="{{ url_for('register') }}">
+                    Create Account
+                </a>
+
+            </div>
+
+
+            <!-- DIVIDER -->
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+
+            <!-- GUEST -->
+            <a
+                href="{{ url_for('guest') }}"
+                class="guest-btn"
+            >
+                Continue as Guest
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Legal Document Extractive Summariser
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f6fb;
+            color: #202033;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            height: 75px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-section img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+        }
+
+        .logo-name {
+            font-size: 23px;
+            font-weight: bold;
+            color: #27235c;
+        }
+
+        .logo-name span {
+            color: #6754e8;
+        }
+
+        .new-analysis {
+            text-decoration: none;
+            background: #5b4bdb;
+            color: white;
+            padding: 11px 20px;
+            border-radius: 9px;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .new-analysis:hover {
+            background: #4939c4;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: 88%;
+            max-width: 1200px;
+            margin: 35px auto;
+        }
+
+        .heading {
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            font-size: 30px;
+            color: #242052;
+        }
+
+        .heading p {
+            color: #777;
+            margin-top: 7px;
+        }
+
+        /* ================= UPLOAD ================= */
+
+        .upload-box {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            margin-bottom: 30px;
+        }
+
+        .upload-box h2 {
+            color: #29245e;
+            margin-bottom: 8px;
+        }
+
+        .upload-box p {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            border: 2px dashed #b9b3ed;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            background: #fafaff;
+        }
+
+        input[type="file"] {
+            margin-bottom: 18px;
+        }
+
+        .summarize-btn {
+            display: block;
+            margin: auto;
+            border: none;
+            background: #5b4bdb;
+            color: white;
+            padding: 13px 28px;
+            border-radius: 9px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .summarize-btn:hover {
+            background: #4939c4;
+        }
+
+        /* ================= ERROR ================= */
+
+        .error {
+            background: #ffecec;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        /* ================= DOCUMENT ================= */
+
+        .document-card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            margin-bottom: 25px;
+        }
+
+        .document-title {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .document-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #29245e;
+            word-break: break-word;
+        }
+
+        /* ================= STATISTICS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .stat-card h3 {
+            font-size: 28px;
+            color: #5b4bdb;
+        }
+
+        .stat-card p {
+            color: #777;
+            margin-top: 5px;
+        }
+
+        /* ================= SECTION ================= */
+
+        .section {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            margin-bottom: 25px;
+        }
+
+        .section h2 {
+            color: #29245e;
+            margin-bottom: 20px;
+        }
+
+        /* ================= CLAUSES ================= */
+
+        .clause-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .clause {
+            background: #f0efff;
+            color: #5143c6;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* ================= KEYWORDS ================= */
+
+        .keyword-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .keyword {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 9px 15px;
+            border-radius: 20px;
+            color: #444;
+        }
+
+        /* ================= RISKS ================= */
+
+        .risk-card {
+            background: #fff8f8;
+            border-left: 5px solid #e53935;
+            padding: 17px;
+            margin-bottom: 13px;
+            border-radius: 9px;
+        }
+
+        .risk-title {
+            color: #c62828;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 7px;
+        }
+
+        .risk-level {
+            display: inline-block;
+            background: #ffe0e0;
+            color: #b71c1c;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .risk-score {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .risk-sentence {
+            color: #444;
+            line-height: 1.6;
+        }
+
+        /* ================= SUMMARY ================= */
+
+        .summary-item {
+            display: flex;
+            gap: 15px;
+            padding: 17px;
+            margin-bottom: 13px;
+            background: #f8f8ff;
+            border-left: 4px solid #5b4bdb;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        .number {
+            min-width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #5b4bdb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .empty {
+            color: #888;
+            padding: 10px 0;
+        }
+
+        /* ================= DOWNLOAD ================= */
+
+        .download-area {
+            text-align: center;
+            margin: 35px 0;
+        }
+
+        .download-button {
+            background: #29245e;
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .download-button:hover {
+            background: #1e1a48;
+        }
+
+        /* ================= HISTORY ================= */
+
+        .history-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .history-table th {
+            text-align: left;
+            padding: 14px;
+            background: #f8f8ff;
+            color: #29245e;
+            border-bottom: 2px solid #eeeeee;
+            white-space: nowrap;
+        }
+
+        .history-table td {
+            padding: 14px;
+            border-bottom: 1px solid #eeeeee;
+            white-space: nowrap;
+        }
+
+        .history-table tr:hover {
+            background: #fafaff;
+        }
+
+        .history-document {
+            font-weight: bold;
+            color: #29245e;
+        }
+
+        .history-date {
+            color: #777;
+            font-size: 13px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            text-align: center;
+            color: #888;
+            padding: 30px;
+            font-size: 13px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 700px) {
+
+            .container {
+                width: 94%;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 0 4%;
+            }
+
+            .logo-name {
+                font-size: 19px;
+            }
+
+            .navbar .new-analysis {
+                padding: 9px 12px;
+                font-size: 13px;
+            }
+
+            .summary-item {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo-section">
+
+        <img
+            src="{{ url_for(
+                'static',
+                filename='images/logo.png'
+            ) }}"
+            alt="Legal Document Extractive Summariser Logo"
+        >
+
+        <div class="logo-name">
+            Legal<span>Lens</span>
+        </div>
+
+    </div>
+
+    <a
+        href="{{ url_for('dashboard') }}"
+        class="new-analysis"
+    >
+        + New Analysis
+    </a>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+    <div class="heading">
+
+        <h1>
+            Legal Document Extractive Summariser
+        </h1>
+
+        <p>
+            Extract important information
+            from lengthy legal documents.
+        </p>
+
+    </div>
+
+
+    <!-- ================= ERROR ================= -->
+
+    {% if error %}
+
+    <div class="error">
+        {{ error }}
+    </div>
+
+    {% endif %}
+
+
+    <!-- ================= UPLOAD ================= -->
+
+    {% if not summary %}
+
+    <div class="upload-box">
+
+        <h2>
+            Analyze a Legal Document
+        </h2>
+
+        <p>
+            Upload a PDF, DOCX or TXT document
+            to extract important legal information.
+        </p>
+
+        <form
+            action="{{ url_for('dashboard') }}"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <div class="file-input">
+
+                <input
+                    type="file"
+                    name="document"
+                    accept=".pdf,.docx,.txt"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="summarize-btn"
+                >
+                    🔍 Analyze Document
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    {% endif %}
+
+
+    {% if summary %}
+
+
+    <!-- ================= DOCUMENT ================= -->
+
+    <div class="document-card">
+
+        <div class="document-title">
+            ANALYZED DOCUMENT
+        </div>
+
+        <div class="document-name">
+            📄 {{ filename }}
+        </div>
+
+    </div>
+
+
+    <!-- ================= STATISTICS ================= -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <h3>
+                {{ word_count }}
+            </h3>
+
+            <p>
+                Words
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                {{ sentence_count }}
+            </h3>
+
+            <p>
+                Sentences
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                {{ summary|length }}
+            </h3>
+
+            <p>
+                Key Sentences
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CLAUSES ================= -->
+
+    <div class="section">
+
+        <h2>
+            ⚖️ Legal Clauses Detected
+        </h2>
+
+        {% if clauses %}
+
+        <div class="clause-container">
+
+            {% for clause in clauses %}
+
+            <div class="clause">
+                ✓ {{ clause }}
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty">
+            No major legal clause categories detected.
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ================= KEYWORDS ================= -->
+
+    <div class="section">
+
+        <h2>
+            🔑 Key Legal Terms
+        </h2>
+
+        {% if keywords %}
+
+        <div class="keyword-container">
+
+            {% for keyword in keywords %}
+
+            <div class="keyword">
+                {{ keyword }}
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty">
+            No keywords detected.
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ================= POTENTIAL RISKS ================= -->
+
+    <div class="section">
+
+        <h2>
+            ⚠️ Potential Risks
+        </h2>
+
+        {% if risks %}
+
+            {% for risk in risks %}
+
+            <div class="risk-card">
+
+                <div class="risk-title">
+
+                    ⚠️
+                    {% if risk.categories %}
+                        {{ risk.categories | join(", ") }}
+                    {% else %}
+                        Potential Risk Area
+                    {% endif %}
+
+                </div>
+
+
+                <div class="risk-level">
+
+                    Importance Level:
+                    {{ risk.level | default("Low") }}
+
+                </div>
+
+
+                <div class="risk-score">
+
+                    Importance Score:
+                    {{ risk.score | default(0) }}
+
+                </div>
+
+
+                <div class="risk-sentence">
+
+                    {{ risk.sentence | default("") }}
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+
+                No potentially important risk areas
+                detected in this document.
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ================= SUMMARY ================= -->
+
+    <div class="section">
+
+        <h2>
+            📑 Extractive Summary
+        </h2>
+
+        <p
+            style="
+                color:#777;
+                margin-bottom:20px;
+            "
+        >
+
+            Important sentences selected
+            using TF-IDF and TextRank.
+
+        </p>
+
+
+        {% if summary %}
+
+            {% for sentence in summary %}
+
+            <div class="summary-item">
+
+                <div class="number">
+                    {{ loop.index }}
+                </div>
+
+                <div>
+                    {{ sentence }}
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+                No summary sentences generated.
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ================= DOWNLOAD ================= -->
+
+    <div class="download-area">
+
+        <form
+            action="{{ url_for('download_report') }}"
+            method="POST"
+        >
+
+            <!-- DOCUMENT -->
+
+            <input
+                type="hidden"
+                name="filename"
+                value="{{ filename }}"
+            >
+
+
+            <!-- WORD COUNT -->
+
+            <input
+                type="hidden"
+                name="word_count"
+                value="{{ word_count }}"
+            >
+
+
+            <!-- SENTENCE COUNT -->
+
+            <input
+                type="hidden"
+                name="sentence_count"
+                value="{{ sentence_count }}"
+            >
+
+
+            <!-- SUMMARY -->
+
+            {% for sentence in summary %}
+
+            <input
+                type="hidden"
+                name="summary"
+                value="{{ sentence }}"
+            >
+
+            {% endfor %}
+
+
+            <!-- KEYWORDS -->
+
+            {% for keyword in keywords %}
+
+            <input
+                type="hidden"
+                name="keywords"
+                value="{{ keyword }}"
+            >
+
+            {% endfor %}
+
+
+            <!-- CLAUSES -->
+
+            {% for clause in clauses %}
+
+            <input
+                type="hidden"
+                name="clauses"
+                value="{{ clause }}"
+            >
+
+            {% endfor %}
+
+
+            <!-- RISKS -->
+
+            {% for risk in risks %}
+
+            <input
+                type="hidden"
+                name="risks"
+                value='{{ risk | tojson | e }}'
+            >
+
+            {% endfor %}
+
+
+            <!-- DOWNLOAD BUTTON -->
+
+            <button
+                type="submit"
+                class="download-button"
+            >
+
+                📥 Download LegalLens Report
+
+            </button>
+
+        </form>
+
+
+        <br>
+
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="new-analysis"
+        >
+
+            Analyze Another Document
+
+        </a>
+
+    </div>
+
+
+    {% endif %}
+
+
+    <!-- ================= DOCUMENT HISTORY ================= -->
+
+    {% if history %}
+
+    <div class="section">
+
+        <h2>
+            🕘 Recent Document History
+        </h2>
+
+
+        <div class="history-table-wrapper">
+
+            <table class="history-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Document
+                        </th>
+
+                        <th>
+                            Words
+                        </th>
+
+                        <th>
+                            Sentences
+                        </th>
+
+                        <th>
+                            Key Sentences
+                        </th>
+
+                        <th>
+                            Analyzed
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in history %}
+
+                    <tr>
+
+                        <td class="history-document">
+
+                            📄 {{ item.filename }}
+
+                        </td>
+
+
+                        <td>
+                            {{ item.word_count }}
+                        </td>
+
+
+                        <td>
+                            {{ item.sentence_count }}
+                        </td>
+
+
+                        <td>
+                            {{ item.key_sentences }}
+                        </td>
+
+
+                        <td class="history-date">
+
+                            {{ item.date }}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    LegalLens — Legal Document Extractive Summariser
+
+    <br>
+    <br>
+
+    This system is designed for
+    document understanding and extractive
+    summarisation and does not replace
+    professional legal advice.
+
+</footer>
+
+</body>
+
+</html>

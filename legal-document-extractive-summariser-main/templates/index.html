@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Legal Document Extractive Summariser | LegalLens
+    </title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f7f8fc;
+            color: #242052;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            height: 78px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7%;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #29245e;
+        }
+
+        .logo-text span {
+            color: #6754e8;
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-login {
+            text-decoration: none;
+            color: #29245e;
+            padding: 11px 20px;
+            font-weight: bold;
+        }
+
+        .nav-register {
+            text-decoration: none;
+            background: #5b4bdb;
+            color: white;
+            padding: 11px 21px;
+            border-radius: 9px;
+            font-weight: bold;
+        }
+
+        .nav-register:hover {
+            background: #4939c7;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 650px;
+            display: flex;
+            align-items: center;
+            padding: 70px 7%;
+            background:
+                radial-gradient(
+                    circle at 90% 20%,
+                    #e5e1ff 0,
+                    transparent 28%
+                ),
+                linear-gradient(
+                    135deg,
+                    #fafaff,
+                    #f2f1ff
+                );
+        }
+
+        .hero-content {
+            max-width: 650px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e9e6ff;
+            color: #5b4bdb;
+            padding: 9px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            font-size: 55px;
+            line-height: 1.12;
+            color: #29245e;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 span {
+            color: #5b4bdb;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #666;
+            max-width: 600px;
+            margin-bottom: 32px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .primary-button {
+            text-decoration: none;
+            background: #5b4bdb;
+            color: white;
+            padding: 15px 28px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(91,75,219,0.20);
+        }
+
+        .primary-button:hover {
+            background: #4939c7;
+        }
+
+        .secondary-button {
+            text-decoration: none;
+            background: white;
+            color: #29245e;
+            padding: 15px 28px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            border: 1px solid #ddd;
+        }
+
+        .secondary-button:hover {
+            background: #f8f7ff;
+        }
+
+        /* ================= HERO VISUAL ================= */
+
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-left: 50px;
+        }
+
+        .document-card {
+            width: 330px;
+            background: white;
+            padding: 28px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(41,36,94,0.15);
+            position: relative;
+        }
+
+        .document-icon {
+            width: 65px;
+            height: 65px;
+            background: #eeeaff;
+            color: #5b4bdb;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+        .document-card h3 {
+            color: #29245e;
+            margin-bottom: 10px;
+        }
+
+        .document-card p {
+            color: #888;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .analysis-line {
+            height: 9px;
+            background: #eeeeff;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .analysis-line.short {
+            width: 65%;
+        }
+
+        .analysis-line.medium {
+            width: 82%;
+        }
+
+        .analysis-line.long {
+            width: 95%;
+        }
+
+        .result-box {
+            margin-top: 22px;
+            background: #f5f3ff;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .result-box strong {
+            color: #5b4bdb;
+            font-size: 14px;
+        }
+
+        .result-box p {
+            margin: 6px 0 0;
+            font-size: 12px;
+        }
+
+        /* ================= FEATURES ================= */
+
+        .features {
+            padding: 70px 7%;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            color: #29245e;
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: #777;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            padding: 28px;
+            background: #fafaff;
+            border: 1px solid #eeeeff;
+            border-radius: 16px;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #eeeaff;
+            color: #5b4bdb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            margin-bottom: 18px;
+        }
+
+        .feature-card h3 {
+            color: #29245e;
+            font-size: 17px;
+            margin-bottom: 9px;
+        }
+
+        .feature-card p {
+            color: #777;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* ================= HOW IT WORKS ================= */
+
+        .how-it-works {
+            padding: 70px 7%;
+            background: #f7f8fc;
+        }
+
+        .steps {
+            max-width: 900px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 25px;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #5b4bdb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-weight: bold;
+        }
+
+        .step h3 {
+            color: #29245e;
+            margin-bottom: 8px;
+        }
+
+        .step p {
+            color: #777;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* ================= DISCLAIMER ================= */
+
+        .disclaimer {
+            text-align: center;
+            padding: 35px 7%;
+            background: white;
+            color: #888;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #29245e;
+            color: #ddd;
+            text-align: center;
+            padding: 25px;
+            font-size: 13px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 900px) {
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-content {
+                max-width: 700px;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                padding-left: 0;
+                margin-top: 45px;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 0 4%;
+            }
+
+            .logo-text {
+                font-size: 20px;
+            }
+
+            .nav-login {
+                padding: 9px;
+            }
+
+            .nav-register {
+                padding: 9px 13px;
+                font-size: 13px;
+            }
+
+            .hero {
+                padding: 55px 5%;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            .hero-description {
+                font-size: 15px;
+            }
+
+            .document-card {
+                width: 290px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <img
+            src="{{ url_for(
+                'static',
+                filename='images/logo.png'
+            ) }}"
+            alt="LegalLens Logo"
+        >
+
+        <div class="logo-text">
+            Legal<span>Lens</span>
+        </div>
+
+    </div>
+
+
+    <div class="nav-buttons">
+
+        <a
+            href="{{ url_for('login') }}"
+            class="nav-login"
+        >
+            Login
+        </a>
+
+        <a
+            href="{{ url_for('register') }}"
+            class="nav-register"
+        >
+            Get Started
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+
+    <div class="hero-content">
+
+        <div class="badge">
+            ⚖️ Intelligent Legal Document Analysis
+        </div>
+
+
+        <h1>
+
+            Understand Legal Documents
+
+            <span>
+                Smarter.
+            </span>
+
+        </h1>
+
+
+        <p class="hero-description">
+
+            Legal Document Extractive Summariser helps
+            you quickly identify important sentences,
+            legal clauses, key terms, and potentially
+            important risk areas from lengthy documents.
+
+        </p>
+
+
+        <div class="hero-buttons">
+
+            <a
+                href="{{ url_for('register') }}"
+                class="primary-button"
+            >
+                Get Started →
+            </a>
+
+
+            <a
+                href="{{ url_for('login') }}"
+                class="secondary-button"
+            >
+                Login
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- VISUAL -->
+
+    <div class="hero-visual">
+
+        <div class="document-card">
+
+            <div class="document-icon">
+                📄
+            </div>
+
+            <h3>
+                Legal Document
+            </h3>
+
+            <p>
+                Extracting the most important
+                information from your document...
+            </p>
+
+
+            <div class="analysis-line long"></div>
+
+            <div class="analysis-line medium"></div>
+
+            <div class="analysis-line short"></div>
+
+
+            <div class="result-box">
+
+                <strong>
+                    ✓ Key information detected
+                </strong>
+
+                <p>
+                    Summary • Clauses • Keywords •
+                    Risk Areas
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+<!-- ================= FEATURES ================= -->
+
+<section class="features">
+
+
+    <div class="section-title">
+
+        <h2>
+            Powerful Document Analysis
+        </h2>
+
+        <p>
+            Designed to make lengthy legal documents
+            easier to understand.
+        </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                📑
+            </div>
+
+            <h3>
+                Extractive Summary
+            </h3>
+
+            <p>
+                Identifies important sentences using
+                TF-IDF and TextRank techniques.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                ⚖️
+            </div>
+
+            <h3>
+                Legal Clauses
+            </h3>
+
+            <p>
+                Detects potentially important legal
+                clause categories in the document.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🔑
+            </div>
+
+            <h3>
+                Key Legal Terms
+            </h3>
+
+            <p>
+                Extracts relevant keywords to help
+                users quickly understand document content.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                ⚠️
+            </div>
+
+            <h3>
+                Risk Highlighting
+            </h3>
+
+            <p>
+                Uses rule-based highlighting to identify
+                potentially important legal-risk areas.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- ================= HOW IT WORKS ================= -->
+
+<section class="how-it-works">
+
+
+    <div class="section-title">
+
+        <h2>
+            How LegalLens Works
+        </h2>
+
+        <p>
+            Three simple steps to analyze a document.
+        </p>
+
+    </div>
+
+
+    <div class="steps">
+
+
+        <div class="step">
+
+            <div class="step-number">
+                1
+            </div>
+
+            <h3>
+                Upload
+            </h3>
+
+            <p>
+                Upload your PDF, DOCX, or TXT
+                legal document.
+            </p>
+
+        </div>
+
+
+        <div class="step">
+
+            <div class="step-number">
+                2
+            </div>
+
+            <h3>
+                Analyze
+            </h3>
+
+            <p>
+                LegalLens processes the document
+                and extracts important information.
+            </p>
+
+        </div>
+
+
+        <div class="step">
+
+            <div class="step-number">
+                3
+            </div>
+
+            <h3>
+                Understand
+            </h3>
+
+            <p>
+                View the summary, clauses,
+                keywords, risks, and downloadable report.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- ================= DISCLAIMER ================= -->
+
+<section class="disclaimer">
+
+    <strong>
+        Important:
+    </strong>
+
+    LegalLens is designed for document understanding
+    and extractive summarisation. Risk highlighting is
+    rule-based and does not replace professional legal advice.
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    © 2026 LegalLens
+
+    <br>
+
+    Legal Document Extractive Summariser
+
+</footer>
+
+
+</body>
+
+</html>

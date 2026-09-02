@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: legallens
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: UPLOAD_FOLDER
+        value: /data/uploads
+      - key: REPORT_FOLDER
+        value: /data/reports
+      - key: HISTORY_FOLDER
+        value: /data/history
+      - key: FLASK_DEBUG
+        value: "false"
+    disk:
+      name: legallens-data
+      mountPath: /data
+      sizeGB: 1
