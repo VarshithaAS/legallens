@@ -47,8 +47,7 @@ git clone https://github.com/VarshithaAS/-legallens.git
 ### 2. Open the project folder
 
 ```bash
-cd ./-legallens/legal-document-extractive-summariser-main```
-
+cd ./-legallens/legal-document-extractive-summariser-main
 ### 3. Install dependencies
 
 ```bash
